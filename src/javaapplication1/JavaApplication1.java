@@ -16,7 +16,7 @@ public class JavaApplication1 {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese su nombre: ");
+        System.out.print("Ingrese su no: ");
         String nombre = scanner.nextLine();
         System.out.print("Ingrese su edad: ");
         Integer edad = scanner.nextInt();
