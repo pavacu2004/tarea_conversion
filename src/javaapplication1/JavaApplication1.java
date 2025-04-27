@@ -30,7 +30,6 @@ public class JavaApplication1 {
         float edad_float = (float) edad; // Convierte la edad a un número de punto flotante
         long telefono_long = Long.parseLong(telefono); // Convierte el número de teléfono a un número largo
         double telefono_double = Double.parseDouble(telefono); // Convierte el número de teléfono a un número de punto doble
-        int telefono_int = Integer.parseInt(telefono); // Convierte el número de teléfono a un número entero
         System.out.print("El nombre en ASCII es: ");
         System.out.println(Arrays.toString(ascii));
         System.out.println("Su edad es: " + edad);
@@ -38,7 +37,6 @@ public class JavaApplication1 {
         System.out.println("Su numero de telefono es: " + telefono);
         System.out.println("Su numero de telefono como long es: " + telefono_long);
         System.out.println("Su numero de telefono como double es: " + telefono_double);
-        System.out.println("Su numero de telefono como int es: " + telefono_int);
         System.out.println("Su carrera es: " + carrera);
     }
     
