@@ -4,3 +4,181 @@
     <mapping directory="" vcs="Git" />
   </component>
 </project>
+
+
+
+public class Plato {
+    private String nombre;
+    private double precio;
+
+    public Plato(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " - $" + precio;
+    }
+}
+
+import java.util.ArrayList;
+
+public class Menu {
+    private String tipo; // Desayuno, Almuerzo, Cena
+    private ArrayList<Plato> platos;
+
+    public Menu(String tipo) {
+        this.tipo = tipo;
+        this.platos = new ArrayList<>();
+    }
+
+    public void agregarPlato(Plato plato) {
+        platos.add(plato);
+    }
+
+    public void mostrarMenu() {
+        System.out.println("=== Menú de " + tipo + " ===");
+        for (int i = 0; i < platos.size(); i++) {
+            System.out.println((i+1) + ". " + platos.get(i));
+        }
+    }
+    public Plato obtenerPlato(int index) {
+        return platos.get(index);
+    }
+
+    public ArrayList<Plato> getPlatos() {
+        return platos;
+    }
+}
+import java.util.ArrayList;
+
+public class Pedido {
+    private ArrayList<Plato> platos;
+
+    public Pedido() {
+        platos = new ArrayList<>();
+    }
+
+    public void agregarPlato(Plato plato) {
+        platos.add(plato);
+    }
+
+    public void mostrarPedido() {
+        System.out.println("=== Pedido actual ===");
+        double total = 0;
+        for (Plato p : platos) {
+            System.out.println(p);
+            total += p.getPrecio();
+        }
+        System.out.println("Total: $" + total);
+    }
+}
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+
+public class Persistencia {
+    public static void guardarPedido(Pedido pedido) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("pedido.txt", true))) {
+            writer.println("Nuevo Pedido:");
+            for (Plato p : pedido.platos) {
+                writer.println(p);
+            }
+            writer.println("------------");
+        } catch (IOException e) {
+            System.out.println("Error al guardar el pedido.");
+        }
+    }
+}
+import java.util.ArrayList;
+
+public class Restaurante {
+    private ArrayList<Menu> menus;
+
+    public Restaurante() {
+        menus = new ArrayList<>();
+    }
+
+    public void agregarMenu(Menu menu) {
+        menus.add(menu);
+    }
+
+    public void mostrarTodosLosMenus() {
+        for (Menu m : menus) {
+            m.mostrarMenu();
+        }
+    }
+
+    public Menu obtenerMenu(int index) {
+        return menus.get(index);
+    }
+}
+
+import java.util.Scanner;
+
+public class Principal {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Restaurante restaurante = new Restaurante();
+
+        // Crear menús
+        Menu desayuno = new Menu("Desayuno");
+        desayuno.agregarPlato(new Plato("Huevos", 5000));
+        desayuno.agregarPlato(new Plato("Café", 2000));
+
+        Menu almuerzo = new Menu("Almuerzo");
+        almuerzo.agregarPlato(new Plato("Bandeja paisa", 15000));
+        almuerzo.agregarPlato(new Plato("Sopa del día", 7000));
+
+        Menu cena = new Menu("Cena");
+        cena.agregarPlato(new Plato("Pizza", 12000));
+        cena.agregarPlato(new Plato("Ensalada", 8000));
+
+        restaurante.agregarMenu(desayuno);
+        restaurante.agregarMenu(almuerzo);
+        restaurante.agregarMenu(cena);
+
+        int opcion;
+        do {
+            System.out.println("\n--- Restaurante ---");
+            System.out.println("1. Ver menús");
+            System.out.println("2. Realizar pedido");
+            System.out.println("0. Salir");
+            opcion = sc.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    restaurante.mostrarTodosLosMenus();
+                    break;
+                case 2:
+                    Pedido pedido = new Pedido();
+                    for (int i = 0; i < 3; i++) {
+                        System.out.println("Selecciona menú (0: Desayuno, 1: Almuerzo, 2: Cena): ");
+                        int menuIdx = sc.nextInt();
+                        Menu menu = restaurante.obtenerMenu(menuIdx);
+                        menu.mostrarMenu();
+                        System.out.println("Selecciona número de plato:");
+                        int platoIdx = sc.nextInt() - 1;
+                        pedido.agregarPlato(menu.obtenerPlato(platoIdx));
+                    }
+                    pedido.mostrarPedido();
+                    Persistencia.guardarPedido(pedido);
+                    break;
+                case 0:
+                    System.out.println("¡Hasta luego!");
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        } while (opcion != 0);
+    }
+}
